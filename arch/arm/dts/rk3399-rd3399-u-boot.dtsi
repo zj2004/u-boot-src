@@ -1,0 +1,37 @@
+// SPDX-License-Identifier: GPL-2.0+
+/*
+ * Copyright (c) 2019 Andy Yan <andy.yan@gmail.com>
+ */
+
+#include "rk3399-u-boot.dtsi"
+#include "rk3399-sdram-lpddr4-100.dtsi"
+/* 2. 让 dmc 在 TPL 阶段被编译进 dtb */
+&dmc {
+    status = "okay";
+    bootph-pre-ram;
+    bootph-some-ram;
+};
+
+/* 3. 早期串口（你已经有了最好也加） */
+&uart2 {
+    bootph-all;
+};
+
+&usb_host1_ehci {
+    status = "okay";
+    #address-cells = <1>;
+    #size-cells = <0>;
+
+    hub@1 {
+        compatible = "usb5e3,608";   /* GL850G */
+        reg = <1>;
+        reset-gpios = <&gpio1 24 GPIO_ACTIVE_LOW>;
+        reset-us = <10>;
+        vdd-supply = <&vcc5v0_host>;
+        bootph-all;
+    };
+};
+
+&usb_host1_ohci {
+    status = "okay";
+};
